@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Lint, typecheck, build, and Guides tests
+    name: Lint, typecheck, build, and tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -57,7 +57,61 @@ jobs:
           cat next-start.log
           exit 1
 
-      - name: Guides acceptance tests
-        run: pnpm test:guides
+      - name: Acceptance and regression tests
+        run: pnpm test
         env:
           GUIDES_BASE_URL: http://127.0.0.1:3000
+
+  docker:
+    name: Docker image build and container tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install pnpm (version from package.json packageManager)
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install test dependencies from the lockfile
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the image
+        run: docker build --tag codethor-agents-md-lab:ci .
+
+      - name: Start a hardened container
+        run: |
+          docker run --detach --name lab --init \
+            --publish 127.0.0.1:3011:3000 \
+            --read-only --tmpfs /tmp \
+            --cap-drop ALL --security-opt no-new-privileges \
+            codethor-agents-md-lab:ci
+          for attempt in $(seq 1 60); do
+            health=$(docker inspect --format '{{.State.Health.Status}}' lab)
+            if [ "$health" = healthy ]; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs lab
+          exit 1
+
+      - name: Check the container runs as a non-root user
+        run: test "$(docker exec lab id -u)" != 0
+
+      - name: Acceptance and regression tests against the container
+        run: pnpm test
+        env:
+          GUIDES_BASE_URL: http://127.0.0.1:3011
+
+      - name: Show container logs
+        if: always()
+        run: docker logs lab || true
