@@ -1,7 +1,7 @@
 # CodeThor AGENTS.md Lab
 
 [![CI](https://github.com/codethor0/codex-301-academy-lab/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/codethor0/codex-301-academy-lab/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/github/license/codethor0/codex-301-academy-lab)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > **Independent educational project.** This is not an official website of
 > OpenAI, OpenAI Academy, the AGENTS.md project, the Linux Foundation, LF
@@ -382,9 +382,18 @@ you open a pull request:
 ## Maintenance
 
 This is a personal learning project maintained on a best-effort basis. There
-is no support commitment or release schedule. Dependency updates and
-security fixes are applied as time allows, and CI runs on every push to
-`main` and on every pull request.
+is no support commitment or release schedule. Maintenance is automated where
+it can be:
+
+- Dependabot opens weekly pull requests for npm packages, GitHub Actions
+  pins, and the Docker base image digest (major versions are skipped), and
+  security update pull requests for vulnerable dependencies
+  (`.github/dependabot.yml`).
+- CI runs on every push to `main` and on every pull request, so an update
+  is merged only after lint, typecheck, build, and all tests pass natively
+  and in the container.
+- CodeQL code scanning, secret scanning, and secret push protection are
+  enabled on the repository.
 
 ## License and attribution
 
