@@ -1,0 +1,128 @@
+[
+  {
+    "id": "write-your-first-agents-md",
+    "title": "Write your first AGENTS.md",
+    "description": "Create practical project instructions that help coding agents understand your codebase and working agreements.",
+    "category": "Getting Started",
+    "destination": "/guides/write-your-first-agents-md",
+    "sections": [
+      {
+        "heading": "Start with a project-level instructions file",
+        "content": "Create an AGENTS.md file at the root of the project you want an agent to work in. Explain what the application does, identify the most useful starting points, and record the expectations that should apply to every change. Begin with the information a new teammate would need to make a safe, focused contribution instead of documenting the entire repository."
+      },
+      {
+        "heading": "Include commands and working agreements",
+        "content": "List the setup, development, and validation commands that actually work in the project. For example, a JavaScript application might start with pnpm dev and validate changes with pnpm lint and pnpm typecheck. Describe important boundaries such as preserving public interfaces, following existing conventions, and asking before adding dependencies."
+      },
+      {
+        "heading": "Check that the guidance is useful",
+        "content": "Ask the coding agent to summarize the relevant instructions before beginning a change. Confirm that it identifies the intended project, accurate commands, and constraints that matter. Refine vague instructions when the agent repeatedly makes an incorrect assumption, and keep the file concise enough for other contributors to review and maintain."
+      }
+    ]
+  },
+  {
+    "id": "what-to-include-in-agents-md",
+    "title": "What to include in AGENTS.md",
+    "description": "Choose the project context, commands, conventions, and boundaries that make persistent agent instructions effective.",
+    "category": "Getting Started",
+    "destination": "/guides/what-to-include-in-agents-md",
+    "sections": [
+      {
+        "heading": "Explain the project and its important entrypoints",
+        "content": "Describe the purpose of the application and identify the directories or files an agent should inspect first. Mention architecture decisions, shared components, or public interfaces when they affect ordinary development. Prefer a short map to the codebase over a complete directory listing, and point to existing design documents when additional detail is necessary."
+      },
+      {
+        "heading": "Record real commands and engineering conventions",
+        "content": "Include the supported commands for installing dependencies, starting the application, running tests, checking types, and applying lint rules. Specify relevant language conventions, naming patterns, accessibility expectations, and documentation requirements. Keep commands accurate for the project rather than copying examples from another application or assuming that every package uses the same tooling."
+      },
+      {
+        "heading": "Define boundaries without turning guidance into a manual",
+        "content": "Identify sensitive operations, protected behavior, and changes that require human approval. Do not put passwords, tokens, API keys, or private customer data in an instructions file. Keep always-on expectations in AGENTS.md; when a procedure requires extensive steps, supporting scripts, or specialized references, consider a reusable skill or separate documentation instead."
+      }
+    ]
+  },
+  {
+    "id": "use-nested-agents-md-files",
+    "title": "Use nested AGENTS.md files for teams and packages",
+    "description": "Keep shared project guidance at the root and place specialized instructions close to the code they govern.",
+    "category": "Workflows",
+    "destination": "/guides/use-nested-agents-md-files",
+    "sections": [
+      {
+        "heading": "Separate shared expectations from local responsibilities",
+        "content": "Use a root AGENTS.md for guidance that applies broadly, such as project-wide validation, dependency policies, and shared implementation conventions. Add a directory-level file when a package, service, or team has genuinely different requirements. A frontend package might document accessibility checks, while a payments service might identify sensitive operations and service-specific tests."
+      },
+      {
+        "heading": "Put specialized instructions near the relevant code",
+        "content": "Place directory-specific instructions inside the package or service they describe, and avoid duplicating every root-level expectation. For example, apps/web/AGENTS.md can cover interface conventions while services/payments/AGENTS.md explains payments-specific validation. Keep each file focused on what changes when work moves into that part of the project."
+      },
+      {
+        "heading": "Verify which instructions your coding agent uses",
+        "content": "Instruction discovery and project-root detection vary across coding tools and workspace setups. Codex combines applicable project guidance from broader directories toward the current working directory when it can identify the project root. Ask the agent which instructions it is using, and explicitly direct it to relevant scoped files when working in a local folder without detectable project-root markers."
+      }
+    ]
+  },
+  {
+    "id": "understand-instruction-precedence",
+    "title": "Understand instruction precedence and overrides",
+    "description": "Learn how Codex combines personal defaults, project instructions, scoped guidance, and supported override files.",
+    "category": "Workflows",
+    "destination": "/guides/understand-instruction-precedence",
+    "sections": [
+      {
+        "heading": "Distinguish personal defaults from project guidance",
+        "content": "In Codex, a personal AGENTS.md in the Codex home directory can provide preferences that apply across projects. A project-level AGENTS.md describes expectations shared by the people working in a particular codebase. Keep personal communication preferences separate from team-owned project instructions so that reusable guidance stays appropriate for everyone."
+      },
+      {
+        "heading": "Understand how specific instructions take precedence",
+        "content": "Codex reads applicable project guidance from the project root toward the current working directory, placing more specific instructions later in the combined context. An AGENTS.override.md takes priority over AGENTS.md at the same directory level. These discovery and override behaviors are Codex-specific; other coding agents may support different filenames, precedence rules, or project-root detection."
+      },
+      {
+        "heading": "Investigate conflicting or missing instructions",
+        "content": "If an agent follows unexpected guidance, check its current working directory, project root, personal instructions, and any applicable override files. Codex can also recognize configured alternative instruction filenames, but these must be explicitly supported by its configuration. Ask the agent to identify its active instruction sources before assuming that a nearby file was discovered automatically."
+      }
+    ]
+  },
+  {
+    "id": "define-validation-and-review-expectations",
+    "title": "Define effective validation and review expectations",
+    "description": "Turn real project checks and recurring review feedback into clear instructions an agent can follow consistently.",
+    "category": "Best Practices",
+    "destination": "/guides/define-validation-and-review-expectations",
+    "sections": [
+      {
+        "heading": "Specify the checks that match the change",
+        "content": "Document the commands contributors already use to validate relevant work, including linting, type checks, feature tests, and service-specific checks. Explain when a narrower test suite is sufficient and when a broader regression check is required. Ask the agent to report the actual result of each command and to identify any check it could not run."
+      },
+      {
+        "heading": "Capture recurring review concerns as actionable guidance",
+        "content": "Translate repeated review feedback into concrete expectations that fit the project. Frontend instructions might require semantic markup, keyboard-accessible controls, and working navigation; an API service might emphasize backwards compatibility, input validation, and protected data. Put specialized review guidance in the closest relevant directory instead of applying every team-specific rule to the entire codebase."
+      },
+      {
+        "heading": "Combine written expectations with real safeguards",
+        "content": "AGENTS.md communicates desired behavior, but it does not replace sandbox permissions, approval policies, automated tests, or human review. Use linters, type checkers, and appropriate automated validation to catch problems independently. Require confirmation before sensitive changes and make sure an agent distinguishes completed verification from assumptions or untested behavior."
+      }
+    ]
+  },
+  {
+    "id": "keep-agents-md-useful",
+    "title": "Keep AGENTS.md concise, accurate, and useful",
+    "description": "Maintain focused project instructions as tools, code ownership, engineering conventions, and recurring issues evolve.",
+    "category": "Best Practices",
+    "destination": "/guides/keep-agents-md-useful",
+    "sections": [
+      {
+        "heading": "Turn repeated mistakes into durable improvements",
+        "content": "Update AGENTS.md when a coding agent repeatedly chooses the wrong command, overlooks a protected interface, or misses a project convention. Capture the smallest instruction that prevents the problem from recurring. Treat the file as shared engineering guidance that should improve through practical feedback rather than an exhaustive policy document written once and forgotten."
+      },
+      {
+        "heading": "Remove stale guidance and keep instructions focused",
+        "content": "Review setup commands, validation steps, ownership boundaries, and referenced files whenever the project changes. Delete obsolete instructions and move specialized rules closer to the directories where they apply. Keep lengthy operational procedures in appropriate documentation or reusable skills so that AGENTS.md remains focused on guidance that should apply whenever an agent works in the project."
+      },
+      {
+        "heading": "Troubleshoot discovery and instruction size",
+        "content": "When instructions appear missing, verify the project folder, current working directory, nonempty file contents, and applicable override files. Codex applies a configurable size limit to discovered project guidance, so excessively large instruction chains may be truncated. Prefer concise, appropriately scoped files and confirm the active instructions before adjusting tool-specific discovery settings."
+      }
+    ]
+  }
+]

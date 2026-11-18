@@ -1,0 +1,198 @@
+# Prepared application baseline
+
+Existing routes: /, /about, /contact, /docs, /resources, and /guides.
+Shared navigation: components/Navbar.tsx.
+Shared page layout: components/ContentPage.tsx.
+Existing page-delivery skill: .agents/skills/add_new_page/SKILL.md.
+Approved Guides request: docs/guides-brief.md.
+Scoped content guidance: content/AGENTS.md.
+Approved complete AGENTS.md guide articles: content/guides.json.
+Baseline feature checks: tests/guides.test.mjs.
+Validation commands: pnpm lint, pnpm typecheck, and pnpm test:guides.
+
+## Resources and Guides handoff
+
+The Resources and Guides pages already follow the shared informational-page
+layout and appear in the existing navigation. The reusable add-new-page skill
+captures the established workflow for adding similar static pages.
+
+The documentation-platform team owns the approved AGENTS.md articles, stable
+identifiers, categories, destinations, and written sections. The web experience
+team owns the catalog, article pages, category filters, accessibility, and
+navigation.
+
+Preserve the approved article content, existing Guides content, Resources page,
+shared navigation, and protected routes when extending the application. The
+article-validation module, Guides catalog, article pages, category filtering,
+reusable frontend reviewer, and additional acceptance checks have not been
+implemented.
+
+## Academy Guides completion report — 2026-11-18
+
+### PR summary
+
+The Guides catalog lists all six approved articles with their original titles,
+descriptions, and categories. Each card opens its approved article URL. Article
+pages render the complete approved section headings and text inside the shared
+page layout. The catalog renders each approved category URL on the server.
+Unknown or repeated category values show all guides. Unknown article slugs
+return HTTP 404.
+
+The original Guides markup and copy match the starter. Checksums match the
+starter for the approved editorial files, Resources page, shared navigation,
+application entry point, package manifest, and lockfile.
+
+### Changed files
+
+- `AGENTS.md` adds the frontend review workflow.
+- `.codex/agents/frontend-reviewer.toml` defines the reusable reviewer.
+- `tests/guides.test.mjs` expands acceptance and regression coverage.
+- `lib/guides.ts` validates the editorial contract and supplies guide data.
+- `pages/guides.tsx` adds the catalog, URL filters, and results announcement.
+- `pages/guides/[slug].tsx` renders the approved article routes.
+- `output.txt` records the release handoff.
+
+The development server and TypeScript refreshed ignored local artifacts in
+`.next` and `tsconfig.tsbuildinfo`. The frozen install populated `node_modules`
+from the existing lockfile.
+
+### Test plan and results
+
+| Stage | Guides tests | Lint | Typecheck |
+| --- | --- | --- | --- |
+| Starter baseline | 4 passed, exit 0 | Exit 0 | Exit 0 |
+| Expanded suite before implementation | 7 passed, 10 expected failures, exit 1 | Baseline evidence | Baseline evidence |
+| Implemented suite before final review | 17 passed, exit 0 | Exit 0 | Exit 0 |
+| Final after reviewer fixes | 17 passed, exit 0 | Exit 0 | Exit 0 |
+
+The intentional failures were missing catalog entries on the unfiltered page
+and the three category URLs, plus HTTP 404 on all six approved article URLs.
+The initial localhost baseline attempts exited 1 because the sandbox blocked
+loopback and the default host reached a different service on port 3000. Valid
+baseline and subsequent results used `pnpm dev --hostname 127.0.0.1` and
+`GUIDES_BASE_URL=http://127.0.0.1:3000 pnpm test:guides`.
+
+The acceptance audit matched the reconstructed starter tests to their baseline
+SHA-256. Original assertions were preserved, the route checks reject redirects,
+and the identifiers and category mappings are pinned to the brief. The suite
+checks each catalog entry once, all three direct filter URLs, all six complete
+article responses, semantic links, current-category and results-status markup,
+unknown-slug handling, and primary navigation on every protected route. It also
+checks the original Guides links and footer and the Resources references.
+
+### Browser smoke checks
+
+Brave showed six cards in the unfiltered view and two for each approved filter.
+A direct Best Practices URL loaded with the correct selection. Getting Started
+and All guides updated the URL and list. Tab reached Workflows and an article
+link, Enter activated both, and the filter retained visible keyboard focus.
+Back restored the filtered list and Forward reopened the article. The article
+showed the approved heading and all three sections. The primary navigation
+opened Resources with its Docs, Examples, and FAQ links. All six article routes
+were verified by the automated response checks.
+
+### Independent review
+
+The pre-implementation frontend reviewer and temporary content investigator ran
+as separate children of a CLI session using the enforced read-only sandbox and
+approval policy `never`. Their findings confirmed the approved six-route mapping,
+the editorial boundary, and the need for focused tests of navigation and URL
+behavior. The starter's CLI skipped project-local discovery, so the named role
+was registered for those invocations with the project TOML as its role file.
+The CLI confirmed `frontend_reviewer` and used the same role for one bounded
+read-only release review.
+
+The final reviewer found that category changes lacked an announcement and that
+primary navigation was only asserted on a single filtered page. The fixes add a
+persistent polite results status and check the primary links and current page on
+each protected route. The final check results above include both fixes.
+
+### Remaining verification and Git delivery
+
+The post-fix browser check of the live status timed out. Automated checks
+confirm the status role and message for each catalog view. Spoken announcements
+with a screen reader remain unverified. Manual browser coverage used Brave.
+
+Git delivery is pending for the public repository phase. This starter has no
+Git metadata, and an authorized `codethor0` repository URL and target branch
+have yet to be supplied. The work is available locally for handoff.
+
+## Release-preparation follow-up — 2026-11-18
+
+The interrupted final specialist review was completed later as a separate
+read-only pass. No sandbox enforced read-only access for that pass. The Codex
+`frontend_reviewer` role was not invoked. The review reused the role's
+criteria and found no release blocker.
+
+The review confirmed one defect: on `/guides/<id>` article pages, no primary
+navigation link was marked current. `components/Navbar.tsx` now gives Guides
+`aria-current="true"` on its article pages and leaves `aria-current="page"`
+unchanged on exact routes. The six article tests in `tests/guides.test.mjs`
+now also assert this state. No existing assertion was removed or relaxed.
+
+| Stage | Guides tests | Lint | Typecheck |
+| --- | --- | --- | --- |
+| Follow-up baseline | 17 passed, exit 0 | Exit 0 | Exit 0 |
+| After navigation fix | 17 passed, exit 0 | Exit 0 | Exit 0 |
+
+Recommendations that were not implemented: canonicalize invalid or repeated
+`category` values, and add tests for those cases. `pnpm audit --prod` reports
+72 advisories, mostly in `next@16.1.0`. The lockfile is unchanged pending
+owner approval. Spoken screen-reader announcements remain unverified.
+
+## Public-release rebranding — 2026-11-18
+
+The owner approved this as a separate scope from the Academy lab. The Academy
+acceptance criteria and tests were not changed. Before any rebranding edit,
+the Academy tree was archived outside the repository as
+`../codex-301-academy-lab-academy-baseline-2026-11-18.tar.gz` (SHA-256
+`609a69e630fcbd6fec49bde1ab630f8aee698c100b7db37891f258b7bc535aed`). The
+archive excludes `node_modules`, `.next`, and build caches. It contains 32
+of the removed asset files.
+
+Changes:
+- Navigation brand, home hero, and page titles now read CodeThor AGENTS.md
+  Lab. Titles keep the `<Page> | AGENTS.md` prefix that the tests pin.
+- The `agents.md` Open Graph and Twitter image, domain, and URL metadata are
+  removed.
+- The LF Projects footer is replaced with an independence notice.
+- Vendor logos, `og.png`, and the AGENTS.md favicons are removed. They are
+  replaced by text labels and an original `favicon.svg`.
+- README has an independence statement and updated attribution. `LICENSE` is
+  unchanged.
+
+| Check | Result |
+| --- | --- |
+| `pnpm test:guides` | 17 passed, exit 0 |
+| `pnpm lint` | Exit 0 |
+| `pnpm typecheck` | Exit 0 |
+| Protected routes, an article page, and `/favicon.svg` | HTTP 200 (curl) |
+| Rendered home page HTML | No `agents.md` URLs, `lfprojects` text, logo paths, or `og:image`/`twitter:image` |
+
+No visual browser check of the rebrand was done in this session.
+
+## Dependency upgrade and release validation — 2026-11-18
+
+The owner approved upgrading `next` and `eslint-config-next` from 16.1.0 to
+16.4.6, and `pnpm-lock.yaml` was regenerated. In the lockfile, `postcss`
+(used by next) went from 8.4.31 to 8.5.23, `sharp` from 0.34.5 to 0.35.5, and
+`@swc/helpers`, `semver`, and `baseline-browser-mapping` moved forward. No
+new direct dependencies were added.
+
+The validation correction: an earlier session found two servers on port 3000.
+The Codex 301 server listened on 127.0.0.1 and the Codex 101 server on IPv6.
+Every test run since then has targeted 127.0.0.1 after checking which project
+the server process runs from. The final checks used a dedicated
+`pnpm dev --hostname 127.0.0.1 --port 3011` server. Before testing, its
+process was confirmed as next-server v16.4.6, its working directory as this
+project, and its home page as showing the CodeThor branding.
+
+| Check | Result |
+| --- | --- |
+| `GUIDES_BASE_URL=http://127.0.0.1:3011 pnpm test:guides` | 17 passed, exit 0 |
+| `pnpm lint` | Exit 0 |
+| `pnpm typecheck` | Exit 0 |
+| `pnpm build` in a separate copy (dev server untouched) | Exit 0 |
+| Guides tests against `pnpm start` on port 3012 in that copy | 17 passed |
+| `pnpm audit --prod` before the upgrade | 72 advisories: 5 critical, 36 high, 26 moderate, 5 low |
+| `pnpm audit --prod` after the upgrade | 23 advisories: 1 critical, 16 high, 5 moderate, 1 low. None are in `next`; the rest are build-time transitive dependencies, assessed in README |
