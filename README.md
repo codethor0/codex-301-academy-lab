@@ -288,13 +288,11 @@ The site has no backend services, authentication, forms, or stored user data.
 
 Dependency status on 2026-11-18:
 
-- `pnpm audit --prod` reports no known vulnerabilities.
-- `pnpm audit` (including dev dependencies) reports one moderate advisory,
-  GHSA-g3hv-75wg-m249 in `minimatch@10.2.6`. It is reached only through
-  ESLint's TypeScript parser (`eslint-config-next` →
-  `@typescript-eslint/typescript-estree`), whose version range does not
-  allow the fixed `minimatch` 11. It runs only while linting, on this
-  repository's own glob patterns, and is not part of the built site.
+- `pnpm audit --prod` and `pnpm audit` (including dev dependencies) both
+  report no known vulnerabilities.
+- The earlier dev-only advisory GHSA-g3hv-75wg-m249 in `minimatch@10.2.6`
+  was resolved by refreshing `typescript-eslint` to 8.73.0 within its
+  existing range, which uses the patched `minimatch` 11.
 
 Docker image scan with grype 0.122.1 on 2026-11-18: no findings in the
 application's dependencies. 13 matches remain in the Alpine base packages:
