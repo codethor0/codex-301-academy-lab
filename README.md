@@ -59,7 +59,9 @@ It is meant for developers who want a working reference for writing
 - Node.js 20.9 or later (the Next.js 16 minimum). CI and the Docker image use
   Node.js 22.
 - pnpm 9.15.1, as pinned in the `packageManager` field of `package.json`.
-  Corepack can provide it: `corepack enable`.
+  On Node.js 20 to 24, Corepack can provide it: `corepack enable`. Node.js 25
+  and later no longer bundle Corepack, so install it first
+  (`npm install --global corepack`) or install pnpm 9.15.1 directly.
 - For Docker: Docker Engine with Compose v2.
 
 No API keys, accounts, databases, external services, or environment variables
@@ -121,8 +123,9 @@ How the image is built:
   unchanged.
 - The runtime stage contains only the server, static assets, and `public/`.
   It runs as the `node` user, and the application files are owned by root.
-  npm, npx, Corepack, and Yarn are removed, and Alpine security updates are
-  applied.
+  npm, npx, Corepack, and Yarn are deleted from the runtime filesystem (they
+  remain in the base image layers), and Alpine security updates are applied
+  at build time, so rebuilds can pick up newer Alpine packages.
 - Next.js telemetry is disabled.
 - Compose drops all Linux capabilities, sets `no-new-privileges`, mounts the
   root filesystem read-only with a `/tmp` tmpfs, and runs an init process.
@@ -296,9 +299,11 @@ Dependency status on 2026-11-18:
 Docker image scan with grype 0.122.1 on 2026-11-18: no findings in the
 application's dependencies. 13 matches remain in the Alpine base packages:
 
-- 4 OpenSSL 3.5.9 CVEs, each reported for both `libssl3` and `libcrypto3`.
-  They affect AES-GCM-SIV misuse, CMS encryption, and QUIC.
-- One BusyBox `wget` CVE.
+- 10 matches from 5 OpenSSL 3.5.9 CVEs (4 high, 1 medium), each reported
+  for both `libssl3` and `libcrypto3`. They affect AES-GCM-SIV misuse, CMS
+  encryption, and QUIC.
+- 3 matches from one medium BusyBox `wget` CVE, reported for `busybox`,
+  `busybox-binsh`, and `ssl_client`.
 
 None has an upstream fix yet, and the server does not call those code
 paths. It serves plain HTTP and makes no outbound connections. Rebuild the

@@ -43,11 +43,12 @@ pnpm lint
 pnpm typecheck
 ```
 
-When changing the Guides experience, start the development server and run the
-existing feature and regression checks:
+When changing the Guides experience or shared components, start the development
+server and run the feature and regression checks (`pnpm test:guides` runs only
+the original Guides checks):
 
 ```bash
-pnpm test:guides
+pnpm test
 ```
 
 ## Frontend review
@@ -71,7 +72,7 @@ pnpm test:guides
 
 - `pnpm lint` passes.
 - `pnpm typecheck` passes.
-- `pnpm test:guides` passes when the Guides experience changes.
+- `pnpm test` passes when the Guides experience or shared components change.
 - Manual smoke checks are completed and documented, including the pages or flows
   checked and their results.
 - A concise PR summary and test plan are ready for review.
