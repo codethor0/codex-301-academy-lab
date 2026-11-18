@@ -28,6 +28,13 @@ RUN pnpm build
 # Runtime: only the traced server files, static assets, and public files.
 # Files stay owned by root, so the unprivileged node user cannot modify them.
 FROM ${NODE_IMAGE} AS runtime
+# Apply current Alpine security updates, and remove the package managers the
+# server never uses at runtime (npm, npx, Corepack, Yarn) along with the
+# vulnerable dependencies they bundle.
+RUN apk upgrade --no-cache \
+ && rm -rf /usr/local/lib/node_modules /opt/yarn-* \
+           /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+           /usr/local/bin/yarn /usr/local/bin/yarnpkg
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
