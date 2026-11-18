@@ -330,11 +330,15 @@ container:
   schemes on the pages checked (`/`, `/guides`, an article, `/resources`).
 - No horizontal scrolling on any route at 390 px width.
 
+Firefox 160 (headless) rendered `/guides?category=workflows` at 1280 px and
+an article page at 390 px correctly. That was a visual render check only.
+
 Not verified:
 
 - No screen reader (VoiceOver, NVDA, or JAWS) has been observed announcing
   the status update.
-- Firefox and Safari have not been tested.
+- Keyboard and interaction behavior in Firefox.
+- Safari.
 
 ## Known limitations
 
