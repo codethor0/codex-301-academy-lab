@@ -1,0 +1,43 @@
+# Version control and local tooling
+.git
+.github
+.agents
+.codex
+.vscode
+.idea
+*.swp
+*~
+.DS_Store
+
+# Dependencies and build output (rebuilt inside the image)
+node_modules
+.next
+out
+build
+.pnpm-store
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrets and local environment files
+.env
+.env.*
+*.pem
+
+# Logs, caches, test artifacts, and archives
+*.log
+logs
+coverage
+.cache
+.eslintcache
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Not needed to build or run the site
+tests
+docs
+output.txt
+Dockerfile
+compose.yaml
+.dockerignore

@@ -33,6 +33,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The Docker image sets NEXT_OUTPUT_STANDALONE=1 to build a self-contained
+  // server. Native `pnpm build` and `pnpm start` are unchanged.
+  output: process.env.NEXT_OUTPUT_STANDALONE === "1" ? "standalone" : undefined,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

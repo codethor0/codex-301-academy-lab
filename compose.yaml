@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    image: codethor-agents-md-lab:local
+    init: true
+    ports:
+      # Reachable only from this machine. Set HOST_PORT to use another port.
+      - "127.0.0.1:${HOST_PORT:-3011}:3000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
