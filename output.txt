@@ -196,3 +196,44 @@ project, and its home page as showing the CodeThor branding.
 | Guides tests against `pnpm start` on port 3012 in that copy | 17 passed |
 | `pnpm audit --prod` before the upgrade | 72 advisories: 5 critical, 36 high, 26 moderate, 5 low |
 | `pnpm audit --prod` after the upgrade | 23 advisories: 1 critical, 16 high, 5 moderate, 1 low. None are in `next`; the rest are build-time transitive dependencies, assessed in README |
+
+## Final release-readiness pass — 2026-11-18
+
+Dependency remediation (no major-version upgrades, no overrides):
+- `tailwindcss` and `@tailwindcss/postcss` went from 4.1.11 to 4.3.5. This
+  removed `tar` from the dependency tree and moved `postcss` to 8.5.33,
+  `nanoid` to 3.3.20, and `source-map-js` to 1.2.3.
+- Other vulnerable transitive packages were refreshed within the version
+  ranges their parents already declare:
+  - `@babel/core` 7.28.3 → 7.29.13
+  - `browserslist` 4.25.3 → 4.29.6
+  - `svgo` 3.3.2 → 3.3.5
+  - `js-yaml` → 4.3.2
+  - `brace-expansion` → 1.1.22 and 5.0.13
+  - `zod` 4.4.3 → 4.6.7
+- `package.json` changed only in the two Tailwind versions.
+
+| Audit | Before this pass | After this pass |
+| --- | --- | --- |
+| `pnpm audit --prod` | 23 (1 critical, 16 high, 5 moderate, 1 low) | No known vulnerabilities |
+| `pnpm audit` (including dev) | 51 | 1 moderate: `minimatch@10.2.6`, GHSA-g3hv-75wg-m249 |
+
+The remaining advisory is dev-only and lint-time. Its fix needs `minimatch`
+11, which `@typescript-eslint/typescript-estree` does not allow. The
+assessment is recorded in README.
+
+| Check | Result |
+| --- | --- |
+| `GUIDES_BASE_URL=http://127.0.0.1:3011 pnpm test:guides` (dev server; process and cwd verified) | 17 passed, exit 0 |
+| `pnpm lint` and `pnpm typecheck` | Exit 0 |
+| Fresh copy: `pnpm install --frozen-lockfile`, typecheck, `pnpm build` | Exit 0 |
+| Guides tests against `pnpm start` in the fresh copy (port 3012) | 17 passed |
+| Headless Chromium 153 checks over the DevTools protocol, desktop and mobile | 40/40 passed |
+| Styling regression: screenshots with Tailwind 4.1.11 vs 4.3.5 | 9 of 11 identical; both home views with the expanded grid identical; only the randomly shuffled, animated collapsed home view differs |
+
+Assistive technology: Chromium's accessibility tree exposes a polite status
+region whose text updates in place on client-side filtering. No screen
+reader has spoken the update in a test.
+
+CI was added in `.github/workflows/ci.yml` with read-only permissions and
+actions pinned to commit SHAs.

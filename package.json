@@ -11,11 +11,11 @@
     "test:guides": "node --test tests/guides.test.mjs"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "4.1.11",
+    "@tailwindcss/postcss": "4.3.5",
     "next": "16.4.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwindcss": "4.1.11"
+    "tailwindcss": "4.3.5"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

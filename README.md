@@ -131,6 +131,19 @@ The suite has 17 tests. They cover:
 - the primary navigation and its current-page state on each protected route
 - the original Guides and Resources links
 
+### Continuous integration
+
+`.github/workflows/ci.yml` runs on every push to `main`, on every pull
+request, and when started manually. It uses read-only `contents`
+permissions, actions pinned to commit SHAs, and no secrets. The steps are:
+
+1. Install from the lockfile.
+2. Lint.
+3. Typecheck.
+4. Build for production.
+5. Start the production server on `127.0.0.1:3000`.
+6. Run the 17 Guides tests against it.
+
 ## Project structure
 
 ```text
@@ -174,26 +187,43 @@ automatically. Its instructions can be reused as a review checklist.
 
 ## Known limitations
 
-- **Dependency advisories.** `next` and `eslint-config-next` were upgraded
-  from 16.1.0 to 16.4.6. That upgrade cleared every advisory against `next`.
-  As of 2026-11-18, `pnpm audit --prod` still reports 23 advisories: 1
-  critical, 16 high, 5 moderate, and 1 low.
-  - 20 of them reach the project through `@tailwindcss/postcss@4.1.11`, via
-    `tar`, `postcss`, `nanoid`, and `source-map-js`.
-  - The other 3 (one in `@babel/core` and two in `browserslist`) reach it
-    through `next` → `styled-jsx` → `@babel/core`.
-  - All of these packages run only at build time, on the project's own
-    files. The site does not unpack archives or process CSS or source maps
-    supplied by visitors.
-  - Upgrading Tailwind CSS is a pending follow-up.
-  - The project is a local learning reference and is not hardened for
-    production. Run `pnpm audit` before you deploy anything built from it.
-- Screen-reader announcements of the results status were checked in markup
-  only. No screen reader has spoken them in a test.
-- Manual browser checks of the Academy lab were done in one Chromium-based
-  browser. The public-release rebranding was checked through server-rendered
-  markup, the automated tests, lint, and typecheck. It has not been checked
-  visually in a browser.
+- **Dependency advisories.** As of 2026-11-18:
+  - `pnpm audit --prod` reports no known vulnerabilities.
+  - `pnpm audit`, which includes dev dependencies, reports 1 moderate
+    advisory: GHSA-g3hv-75wg-m249 in `minimatch@10.2.6`. It is a
+    denial-of-service through crafted glob patterns.
+  - That `minimatch` is reached only through ESLint's TypeScript parser
+    (`eslint-config-next` → `@typescript-eslint/typescript-estree`). The fix
+    needs `minimatch` 11, which the parent package's version range does not
+    allow.
+  - The affected code runs only while linting, on glob patterns from this
+    repository's own config. It is not part of the built site.
+  - This project is a learning reference and is not hardened for production.
+    Run `pnpm audit` before you deploy anything built from it.
+- **Duplicate links in the compatibility marquee.** The collapsed view
+  renders each tool link twice so the scrolling animation can loop, so a
+  keyboard user tabs through 46 links before reaching the toggle. This is
+  upstream behavior and is unchanged. The expanded grid lists each tool once.
+- **Screen-reader announcements are only partly verified.** Headless
+  Chromium shows that the accessibility tree exposes the Guides results
+  summary as `role="status"` with `live="polite"`. It also shows that the
+  same DOM node stays in place across client-side filter changes while its
+  text updates, for example "All categories. 6 guides shown." becomes
+  "Workflows. 2 guides shown." No screen reader (VoiceOver, NVDA, or JAWS)
+  has spoken the update in a test.
+- **Browser coverage is limited to Chromium.** The Academy lab was checked
+  manually in Brave. The release build passed 40 scripted headless-Chromium
+  checks at desktop (1280×900) and mobile (390×844) sizes. Those checks
+  covered:
+  - layout, with no horizontal scrolling
+  - branding
+  - every compatibility link
+  - keyboard-driven filters, article navigation, and primary navigation
+  - visible focus
+  - Back and Forward history
+  - absence of console errors
+
+  Firefox and Safari were not tested.
 - The home page keeps the upstream site's descriptive copy, including its
   adoption figure ("over 60k open-source projects"). This project has not
   checked that figure independently.
