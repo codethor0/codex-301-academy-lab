@@ -135,7 +135,13 @@ function attribute(element, name) {
 
 function textContent(html) {
   const entities = { "&amp;": "&", "&quot;": '"', "&#x27;": "'", "&lt;": "<", "&gt;": ">" };
-  return html.replace(/<[^>]+>/g, "").replace(/&(?:amp|quot|#x27|lt|gt);/g, (entity) => entities[entity]).trim();
+  // Strip tags until none remain, so nested fragments cannot leave a tag behind.
+  let text = html;
+  for (let previous; previous !== text; ) {
+    previous = text;
+    text = text.replace(/<[^>]+>/g, "");
+  }
+  return text.replace(/&(?:amp|quot|#x27|lt|gt);/g, (entity) => entities[entity]).trim();
 }
 
 function pageMain(html) {
