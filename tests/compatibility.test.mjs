@@ -82,6 +82,11 @@ test("the collapsed compatibility list exposes each tool link once", async () =>
 
   assert.ok(uniqueTools.size > 0, "the compatibility list should name supported tools");
   assert.equal(
+    hidden.length,
+    exposed.length,
+    "the decorative duplicate should mirror the exposed list, so the whole list was parsed",
+  );
+  assert.equal(
     exposed.length,
     uniqueTools.size,
     "keyboard and screen-reader users should reach each tool link exactly once",
