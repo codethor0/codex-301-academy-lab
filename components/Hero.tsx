@@ -20,11 +20,7 @@ export default function Hero() {
           </p>
 
           <p className="mt-2 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
-            A simple, open format for guiding coding agents,{" "}
-            <br className="hidden sm:block" />
-            used by over{" "}
-            60k open-source projects
-            .
+            A simple, open format for guiding coding agents.
           </p>
 
           <p className="mt-3 text-lg leading-relaxed text-gray-700 dark:text-gray-300 pr-4">
