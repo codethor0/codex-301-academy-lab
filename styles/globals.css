@@ -116,6 +116,11 @@ code {
   will-change: transform;
 }
 
+/* Hold the list still while keyboard focus is on one of its links. */
+.logo-marquee-track:focus-within {
+  animation-play-state: paused !important;
+}
+
 @keyframes logo-marquee-scroll {
   from {
     transform: translateX(0);
@@ -128,5 +133,10 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .logo-marquee-track {
     animation: none;
+  }
+
+  /* Without motion there is no loop, so the duplicate copy is not needed. */
+  .logo-marquee-copy {
+    display: none;
   }
 }

@@ -167,9 +167,7 @@ function LogoMarqueeRow({
   duration: number;
   offset?: number;
 }) {
-  const doubledAgents = useMemo(() => [...agents, ...agents], [agents]);
-
-  if (doubledAgents.length === 0) {
+  if (agents.length === 0) {
     return null;
   }
 
@@ -182,12 +180,25 @@ function LogoMarqueeRow({
   return (
     <div className="w-full overflow-hidden">
       <div
-        className="logo-marquee-track flex items-center gap-8 py-3"
+        className="logo-marquee-track flex items-center py-3"
         style={trackStyle}
       >
-        {doubledAgents.map((agent, index) => (
-          <LogoItem key={`${agent.name}-${index}`} {...agent} />
-        ))}
+        <div className="flex items-center gap-8 pr-8">
+          {agents.map((agent) => (
+            <LogoItem key={agent.name} {...agent} />
+          ))}
+        </div>
+        {/* The second copy only makes the scroll loop seamless. It is hidden
+            from assistive technology and removed from the tab order. */}
+        <div
+          className="logo-marquee-copy flex items-center gap-8 pr-8"
+          aria-hidden="true"
+          inert
+        >
+          {agents.map((agent) => (
+            <LogoItem key={agent.name} {...agent} />
+          ))}
+        </div>
       </div>
     </div>
   );
