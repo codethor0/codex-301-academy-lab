@@ -5,7 +5,7 @@ const isProduction = process.env.NODE_ENV === "production";
 // The site loads scripts, styles, fonts, and images only from its own origin.
 // 'unsafe-inline' is required in script-src because the Turbopack production
 // build emits a per-page inline chunk-loader script, and in style-src for the
-// compatibility marquee timing. All content is rendered as React text, so the
+// marquee timing and badge colors set as style attributes. All content is rendered as React text, so the
 // site has no HTML injection sink.
 const contentSecurityPolicy = [
   "default-src 'self'",

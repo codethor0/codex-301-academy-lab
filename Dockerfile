@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 # Official Node.js 22 Alpine image, pinned by digest (multi-platform index).
 # Update the tag and digest together:
 #   docker buildx imagetools inspect node:22-alpine
@@ -43,6 +41,7 @@ ENV NODE_ENV=production \
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/public ./public
+COPY --from=build /app/LICENSE ./LICENSE
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
