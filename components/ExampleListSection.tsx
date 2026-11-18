@@ -9,6 +9,17 @@ const LANG_BG_COLORS: Record<string, string> = {
   "C++": "#f34b7d",
 };
 
+// Use white badge text only when it meets the WCAG AA 4.5:1 contrast ratio
+// against the badge color; otherwise use black text.
+function badgeTextColor(hex: string): string {
+  const channel = (offset: number) => {
+    const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+    return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  };
+  const luminance = 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
+  return 1.05 / (luminance + 0.05) >= 4.5 ? "#ffffff" : "#000000";
+}
+
 interface RepoCardProps {
   /** e.g. "openai/codex" */
   name: string;
@@ -141,7 +152,7 @@ function ExampleCard({
       <div className="flex items-end justify-between mt-4">
         <span
           className="text-xs font-semibold px-2 py-0.5 rounded"
-          style={{ backgroundColor: badgeBg, color: "#fff" }}
+          style={{ backgroundColor: badgeBg, color: badgeTextColor(badgeBg) }}
         >
           {repo.language}
         </span>
